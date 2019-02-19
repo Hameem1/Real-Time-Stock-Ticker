@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> Stock Hub</title>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+
+
+
+	    <style>
+.button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 16px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.button1 {
+    background-color: white;
+    color: black;
+    border: 2px solid #878888;
+}
+.button1:hover {
+    background-color: #4CAF50;
+    color: white;
+}
+.button1:active {
+  background-color: #ff6347;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+.button2 {
+    background-color: white;
+    color: black;
+    border: 2px solid #878888;
+    margin-left: 1%;
+
+}
+
+.button2:hover {
+    background-color: #008CBA;
+    color: white;
+}
+.button2:active {
+  background-color: #ff6347;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+.button3 {
+    background-color: white;
+    color: black;
+    border: 2px solid #878888;
+    margin-left: 1%;
+}
+
+.button3:hover {
+    background-color: #ba0f01;
+    color: white;
+}
+.button3:active {
+  background-color: #ff6347;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+.checkbox {
+	margin: 10px;
+	width: 10px;
+	height: 10px;
+	border: 1px solid black;
+	-ms-transform: scale(2);
+	-webkit-transform: scale(2);
+	transform: scale(2);
+}
+
+.checkboxtext {
+	font-size: 25px;
+    font-family: Calibri;
+	color: #000000;
+}
+
+.value_text {
+	font-size: 25px;
+    font-family: Calibri;
+	color: #bf0332;
+}
+
+.div1{
+     width: 250px;
+    height: 200px;
+    border: none;
+    margin-left: 25%;
+    margin-top: 1%;
+}
+
+.h1  {
+    color: #346e86;
+    padding: 16px 32px;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: "Old English Text MT";
+    font-size: 85px;
+    margin-top: 3%;
+    margin-left: 1%;
+    text-align: center;
+}
+.h2   {
+    color: #454646;
+    padding: 16px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 50px;
+    margin: 4px 2px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 0%;
+    margin-left: 23%;
+    font-family: "Adobe Garamond Pro";
+}
+
+.circle:before {
+    content: ' \25CF';
+    font-size: 25px;
+    color: #065bba;
+
+}
+
+img {
+    image-rendering: auto;
+    height: 5%;
+    width: 5%;
+    float: left;
+}
+</style>
+</head>
+<body>
+
+        <img src="/static/thestockbaylogo.png" alt="logo" class="div1">
+        <h1 class="h1"> The Stock Bay </h1>
+        <h2 class="h2"> You can subscribe to stock or weather information </h2>
+
+
+
+	<div style="float: left; width: 25%; margin-left: 30%"> <form  style="margin-top: 7%; margin-left: 1%;"  method="POST">
+		<p style="color: #346e86; font-size: 50px; margin-left: 0.5%; margin-bottom: 1%; font-family: Calibri; font-weight: bold;"> Stocks </p>
+        <input type="checkbox" id="1" value="Microsoft" class="checkbox"> <span class = "checkboxtext"> Microsoft : </span><span class="value_text" id="room_1"> </span><span id="blip_1"> </span> <br>
+        <input type="checkbox" id="2" value="Google" class="checkbox"><span class = "checkboxtext"> Google : </span><span class="value_text" id="room_2"> </span><span id="blip_2"> </span><br>
+        <input type="checkbox" id="3" value="Facebook" class="checkbox"> <span class = "checkboxtext"> Facebook : </span><span class="value_text" id="room_3"> </span><span id="blip_3"> </span><br>
+		<input type="checkbox" id="4" value="IBM" class="checkbox"><span class = "checkboxtext"> IBM : </span><span class="value_text" id="room_4"> </span><span id="blip_4"> </span><br>
+		<input type="checkbox" id="5" value="TESLA" class="checkbox"> <span class = "checkboxtext"> Tesla : </span><span class="value_text" id="room_5"> </span><span id="blip_5"> </span><br><br><br>
+
+
+        <div style="margin-left: 30%; width: 100%;">
+		<button class="button button1" id="sub">Subscribe</button>
+        <button class="button button3" id="unsub">Unsubscribe</button>
+        <button class="button button2">Reset</button>
+        </div>
+
+        <ul id="demo"></ul>
+    </form>
+    </div>
+
+
+    <div style="float: left; margin-left: 7.5%; "> <form method="POST">
+		<p style="color: #346e86; font-size: 50px; margin-left: 0.5%; margin-bottom: 1%; font-family: Calibri; font-weight: bold;"> Weather </p>
+        <input type="checkbox" id="6" value="Stuttgart" class="checkbox"> <span class = "checkboxtext"> Stuttgart : </span><span class="value_text" id="room_6"> </span> <br>
+        <input type="checkbox" id="7" value="Karlsruhe" class="checkbox"><span class = "checkboxtext"> Berlin : </span><span class="value_text" id="room_7"> </span><br>
+        <input type="checkbox" id="8" value="Hamburg" class="checkbox"> <span class = "checkboxtext"> Hamburg : </span><span class="value_text" id="room_8"> </span><br>
+		<input type="checkbox" id="9" value="Rostock" class="checkbox"><span class = "checkboxtext"> Rostock : </span><span class="value_text" id="room_9"> </span><br>
+		<input type="checkbox" id="10" value="Dortmund" class="checkbox"> <span class = "checkboxtext"> Dortmund : </span><span class="value_text" id="room_10"> </span><br><br><br>
+    </form>
+    </div>
+
+
+	<script type="text/javascript">
+$(document).ready(function(){
+
+	var socket = io.connect("http://127.0.0.1:5000");
+	var UID;
+	var data_test;
+	var htmlStr;
+
+	socket.on('connect',function(){
+		socket.send('User has connected!');
+	});
+
+	socket.on('disconnect', function(){
+		//maybe clear the saved usr_id variable for cleanup or remove this entire function
+	});
+
+	socket.on('message', function(usr_id){
+		UID = usr_id;   //User ID saved as global
+        console.log('Received User ID : ' + usr_id);
+	});
+
+
+	socket.on('stocks updated', function(data) {
+	    console.log("new stock updates!!");
+        data_test = data;
+        var key = Object.keys(data_test);
+
+        if (key[0]=="Microsoft")
+            {
+                document.getElementById("room_1").innerHTML = data_test.Microsoft;
+            };
+        if (key[0]=="Google")
+            {
+                document.getElementById("room_2").innerHTML = data_test.Google;
+            };
+        if (key[0]=="Facebook")
+            {
+                document.getElementById("room_3").innerHTML = data_test.Facebook;
+            };
+        if (key[0]=="IBM")
+            {
+                document.getElementById("room_4").innerHTML = data_test.IBM;
+            };
+        if (key[0]=="TESLA")
+            {
+                document.getElementById("room_5").innerHTML = data_test.TESLA;
+            };
+
+    });
+
+	socket.on('weather updated', function(data) {
+	    console.log("new weather updates!!")
+        data_test = data;
+        var key = Object.keys(data_test);
+
+        if (key[0]=="Stuttgart")
+            {
+                document.getElementById("room_6").innerHTML = data_test.Stuttgart;
+            };
+        if (key[0]=="Karlsruhe")
+            {
+                document.getElementById("room_7").innerHTML = data_test.Karlsruhe;
+            };
+        if (key[0]=="Hamburg")
+            {
+                document.getElementById("room_8").innerHTML = data_test.Hamburg;
+            };
+        if (key[0]=="Rostock")
+            {
+                document.getElementById("room_9").innerHTML = data_test.Rostock;
+            };
+        if (key[0]=="Dortmund")
+            {
+                document.getElementById("room_10").innerHTML = data_test.Dortmund;
+            };
+
+    });
+
+	socket.on('V_detection', function(data) {
+	    console.log("Blip!!");
+        data_test = data;
+        var key = Object.keys(data_test);
+
+        if (key[0]=="Microsoft")
+            {
+                htmlStr = "<span class=\"circle\" id=\"blip_1\"> </span>";
+                $("#blip_1").html(htmlStr);
+                setTimeout(function(){ $('.circle').fadeOut() }, 2000);
+            };
+
+        if (key[0]=="Google")
+            {
+                htmlStr = "<span class=\"circle\" id=\"blip_2\"> </span>";
+                $("#blip_2").html(htmlStr);
+                setTimeout(function(){ $('.circle').fadeOut() }, 2000);
+            };
+        if (key[0]=="Facebook")
+            {
+                htmlStr = "<span class=\"circle\" id=\"blip_3\"> </span>";
+                $("#blip_3").html(htmlStr);
+                setTimeout(function(){ $('.circle').fadeOut() }, 2000);
+            };
+        if (key[0]=="IBM")
+            {
+                htmlStr = "<span class=\"circle\" id=\"blip_4\"> </span>";
+                $("#blip_4").html(htmlStr);
+                setTimeout(function(){ $('.circle').fadeOut() }, 2000);
+            };
+        if (key[0]=="TESLA")
+            {
+                htmlStr = "<span class=\"circle\" id=\"blip_5\"> </span>";
+                $("#blip_5").html(htmlStr);
+                setTimeout(function(){ $('.circle').fadeOut() }, 2000);
+            };
+
+    });
+
+
+	$("#sub").click(function () {
+    });
+
+	$("#sub").click(function () {
+
+	    event.preventDefault();
+        var jsonObj = [];
+        $.each($('[type=checkbox]:checked'), function(){
+            jsonObj.push($(this).val());
+        });
+        console.log(jsonObj)
+        socket.emit('join',jsonObj);
+        for (var i=1; i<=10; i++)
+        {
+            if (document.getElementById(i).checked = true)
+            {
+                document.getElementById(i).checked = false;
+            }
+        }
+    });
+
+	$("#unsub").click(function () {
+
+	    event.preventDefault();
+	    var sel,counter=0;
+        var arr = [];
+        var jsonObj = [];
+        $.each($('[type=checkbox]:checked'), function(){
+            jsonObj.push($(this).val());
+        });
+        socket.emit('leave',jsonObj);
+
+        //Clears the checkboxes and removes the dynamic value from the page
+        for (i in jsonObj)
+        {
+            if(jsonObj[i]=="Microsoft"){sel=1;}
+            if(jsonObj[i]=="Google"){sel=2;}
+            if(jsonObj[i]=="Facebook"){sel=3;}
+            if(jsonObj[i]=="IBM"){sel=4;}
+            if(jsonObj[i]=="TESLA"){sel=5;}
+            if(jsonObj[i]=="Stuttgart"){sel=6;}
+            if(jsonObj[i]=="Karlsruhe"){sel=7;}
+            if(jsonObj[i]=="Hamburg"){sel=8;}
+            if(jsonObj[i]=="Rostock"){sel=9;}
+            if(jsonObj[i]=="Dortmund"){sel=10;}
+            arr.push(sel);
+        }
+
+        while(counter<arr.length)
+        {
+            document.getElementById(arr[counter]).checked = false;
+            document.getElementById("room_"+arr[counter]).innerHTML = null;
+            counter++;
+        }
+    });
+
+});
+
+</script>
+</body>
+<footer style="color: #316980; font-size: 14px; margin-top: 30%; margin-left: 45%">&copy; 2018 thestockhub.com</footer>
+</html>
